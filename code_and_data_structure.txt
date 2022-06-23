@@ -1,0 +1,24 @@
+1. Data organization
+    The data is stored in the form of recordings in the .npy format and .txt files describing their content.
+    For each colony "colony_name", you find both recordings and txt tiles in the folder /data/colony_name/recordings/
+    Each txt file is a table that describe sounds that were detected in the corresponding recording.
+
+    Importantly, there is a "recordings_metadata.csv" file that contains metadata (data, colony, rats involved etc.) of
+    all recordings in the data storage. We also use this metadata file to track what processing steps were applied
+    to each recording. This is represented by the "processing stage" column.
+
+2. Notebooks
+
+    The most important notebooks that can modify the data are stored in the /notebooks/process new data/ folder.
+    First, to upload new recordings there is the upload_new_recordings.ipynb notebook. It takes recordings in .wav or
+    .npy format from an external folder, moves them into the data storage and updates "recordings_metadata.csv".
+
+    Then, there are two notebooks that update the txt files: "run_SoundSpliter.ipynb" and "run_classification.ipynb".
+    The former detects the sounds in the recordings and adds them into the txt file, while the latter runs sound class
+    classification and updates the "class" column in the txt file.
+
+    The "run_SoftTrace.ipynb" notebook is responsible for computing traces of the sounds. Trace is a binary image in
+    the time VS. frequency domain which we used to denoise some sounds (softchirps). Based on the notebook parameters,
+    it takes particular sounds from a set of the recordings and computes traces for them. The traces are stored
+    as images in the /data/colony_name/traces/ folder.
+

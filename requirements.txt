@@ -1,0 +1,8 @@
+pandas
+scikit_image
+matplotlib
+numpy
+scipy
+librosa
+scikit_learn
+noisereduce
