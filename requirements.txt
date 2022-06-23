@@ -1,10 +1,10 @@
 pandas
-scikit_image
+scikit-image
 matplotlib
 numpy
 scipy
 librosa
-scikit_learn
+scikit-learn
 noisereduce
 nb_conda_kernels
 notebook
