@@ -8,3 +8,5 @@
 /multi-runs_classifier/
 /updated_model-examples/
 */__pycache__*
+*/.ipynb_checkpoints/
+/notebooks/training scripts/tracing_model/segmentator3000/
