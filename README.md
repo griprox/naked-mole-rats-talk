@@ -8,12 +8,13 @@ in the terminal or download and unzip repository manually (top right corner, Cod
 - Install python modules and Jupyter Notebook by running \
 ```cd naked-mole-rats-talk```\
 ```conda install -c conda-forge --yes --file requirements.txt```
+```pip install noisereduce```
 - Install CPU version of tensorflow 2.4.1 by running \
 ```pip install tensorflow==2.4.1```
 - If you want to use GPU, follow the official [guidelines](https://www.tensorflow.org/install/pip)
 
 Now, you need to ensure that paths in recordings_metadata.csv actually point
-at the data at your machine. To achieve that, do the following:
+at the data on your machine. To achieve that, do the following:
 - Save data folder side by side with the code, so that you project folder will look as follows:
 ``` 
 |-- naked-mole-rats-talk

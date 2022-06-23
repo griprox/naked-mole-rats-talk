@@ -5,6 +5,5 @@ numpy
 scipy
 librosa
 scikit-learn
-noisereduce
-nb_conda_kernels
 notebook
+nb_conda_kernels
