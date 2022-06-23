@@ -6,4 +6,5 @@ scipy
 librosa
 scikit_learn
 noisereduce
-tensorflow==2.4.1
+nb_conda_kernels
+notebook
