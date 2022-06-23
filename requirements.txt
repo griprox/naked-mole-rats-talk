@@ -6,4 +6,3 @@ scipy
 librosa
 scikit_learn
 noisereduce
-notebook
