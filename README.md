@@ -7,8 +7,8 @@ in the terminal or download and unzip repository manually (top right corner, Cod
    ```conda activate envname```
 - Install python modules and Jupyter Notebook by running \
 ```cd naked-mole-rats-talk```\
-```conda install -c conda-forge --yes --file requirements.txt```
-```pip install noisereduce```
+```pip install -r requirements.txt```\
+```conda install notebook```
 - Install CPU version of tensorflow 2.4.1 by running \
 ```pip install tensorflow==2.4.1```
 - If you want to use GPU, follow the official [guidelines](https://www.tensorflow.org/install/pip)

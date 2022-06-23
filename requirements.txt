@@ -1,9 +1,9 @@
 pandas
-scikit-image
+scikit_image
 matplotlib
 numpy
 scipy
 librosa
-scikit-learn
+scikit_learn
+noisereduce
 notebook
-nb_conda_kernels
