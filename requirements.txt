@@ -6,3 +6,4 @@ scipy
 librosa
 scikit_learn
 noisereduce
+tensorflow==2.4.1
