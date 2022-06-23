@@ -26,3 +26,4 @@ at the data on your machine. To achieve that, do the following:
 - Open terminal, and go to the project directory ```cd path/naked-mole-rats-talk/```
 - Run [setup](/setup_paths.py) script: ``` python setup_paths.py data```.
 - Open the recordings_metadata.csv file and confirm that paths there are correct.
+- 
