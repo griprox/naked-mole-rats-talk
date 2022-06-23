@@ -7,3 +7,4 @@
 /models/
 /multi-runs_classifier/
 /updated_model-examples/
+*/__pycache__*
