@@ -1,5 +1,5 @@
 ### Installation
-- Run ```git clone https://github.com/griprox/Naked-mole-rat-voices``` in the terminal or download and unzip repository manually (top right corner, Code-> Download ZIP).
+- Run ```git clone https://github.com/griprox/naked-mole-rats-talk.git``` in the terminal or download and unzip repository manually (top right corner, Code-> Download ZIP).
 - Install [Anaconda or Miniconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
 - Create and activate virtual environment using conda: \
    ```conda create -n envname python=3.7``` \
