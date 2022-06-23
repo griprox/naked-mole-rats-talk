@@ -1,3 +1,4 @@
+from src.metadata_processing.filters import filter_sounds_metadata_extended
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -6,7 +7,6 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as colors
 
-from src.preprocessing_old.filters import filter_sounds_metadata_extended
 
 def plot_prediction_histogram(age, ratid, sounds_metadata_extended, grouped_labels):
     

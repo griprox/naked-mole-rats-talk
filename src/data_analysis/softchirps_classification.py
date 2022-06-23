@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.ensemble import RandomForestClassifier
-from src.preprocessing_old.process_softchirp_features import choose_features
-from src.util import get_ordered_y, get_grouping_indexes, get_balancing_indexes
+from src.util import get_ordered_y, get_balancing_indexes
 from src.visualization.plotting_utils import plot_confusion_matrix
+from src.visualization.plot_softchirps import choose_features
 import matplotlib.pyplot as plt
 
 def make_bins(column, binsize = 100):
