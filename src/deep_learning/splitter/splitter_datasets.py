@@ -2,7 +2,7 @@ from src.metadata_processing.process_sounds_metadata import generate_sounds_meta
 from src.metadata_processing.load_data import load_recordings_metadata, load_sounds
 from src.metadata_processing.process_sounds_metadata import make_fixed_size_sounds
 from src.audiodata_processing.process_waves import process_waves, butter_highpass_filter, denoise_recording
-from src.audiodata_processing.extract_features_from_wave import extract_specs, extract_melspecs
+from src.audiodata_processing.extract_features_from_wave import extract_specs_new, extract_melspecs
 from src.audiodata_processing.process_spectrograms import augment_im, resize_with_padding
 import pandas as pd
 import numpy as np
@@ -47,10 +47,10 @@ def create_data_for_splitter(all_params_dict, dataset_name, path_to_save, save=F
     sounds_npy_train = load_sounds(sounds_metadata_train, recs_dict, noisy_sampling=False, timestamps='int')
     sounds_npy_test = load_sounds(sounds_metadata_test, recs_dict, noisy_sampling=False, timestamps='int')
     # Filter waves
-    frequency_threshold = all_params_dict['features']['frequency_threshold']
-    sounds_npy_train = np.array([butter_highpass_filter(sound, frequency_threshold, sr)
+    highpass_filtering = all_params_dict['features']['highpass_filtering']
+    sounds_npy_train = np.array([butter_highpass_filter(sound, highpass_filtering, sr)
                                  for sound in sounds_npy_train])
-    sounds_npy_test = np.array([butter_highpass_filter(sound, frequency_threshold, sr)
+    sounds_npy_test = np.array([butter_highpass_filter(sound, highpass_filtering, sr)
                                 for sound in sounds_npy_test])
     # Augment waves
     wave_augment_params = all_params_dict['features']['wave_augment_params']
@@ -61,18 +61,22 @@ def create_data_for_splitter(all_params_dict, dataset_name, path_to_save, save=F
         sounds_metadata_train = pd.concat([sounds_metadata_train] *
                                           wave_augment_params['times_each_sound']).reset_index(drop=True)
     # Extract spectrograms
-    use_melspecs = all_params_dict['features']['use_melspecs']
-    n_fft = all_params_dict['features']['n_fft']
-    n_mel = all_params_dict['features']['n_mel']
+    specs_type = all_params_dict['features']['specs_type']
+    extract_specs_params = all_params_dict['features']['extract_specs_params']
+    n_fft = extract_specs_params['nperseg']
+    n_mel = extract_specs_params['num_freq_bins']
     target_shape = all_params_dict['features']['target_shape']
     times_augment_im = all_params_dict['features']['times_augment_im']
     use_augment_im = all_params_dict['features']['augment_im']
-    if use_melspecs:
+    if specs_type == 'mel':
         melspecs_train = extract_melspecs(sounds_npy_train, sr, n_fft, n_mel)
         melspecs_test = extract_melspecs(sounds_npy_test, sr, n_fft, n_mel)
+    elif specs_type == 'new-specs':
+        melspecs_train = np.array(extract_specs_new(sounds_metadata_train, sounds_npy_train, extract_specs_params))
+        melspecs_test = np.array(extract_specs_new(sounds_metadata_test, sounds_npy_test, extract_specs_params))
     else:
-        melspecs_train = np.array(extract_specs(sounds_npy_train, n_fft))
-        melspecs_test = np.array(extract_specs(sounds_npy_test, n_fft))
+        raise ValueError('Unsupported specs_type %s' % specs_type)
+    print('Shapes:', melspecs_train.shape, melspecs_test.shape)
     # Augment spectrograms
     sounds_npy_train = np.concatenate([sounds_npy_train] * times_augment_im, 0)
     sounds_metadata_train = pd.concat([sounds_metadata_train] * times_augment_im, 0)

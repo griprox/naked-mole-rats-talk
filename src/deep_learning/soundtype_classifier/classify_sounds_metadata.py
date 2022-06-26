@@ -1,7 +1,8 @@
 from src.audiodata_processing.process_waves import process_waves, butter_highpass_filter, denoise_recording
-from src.audiodata_processing.extract_features_from_wave import extract_specs, extract_melspecs
+from src.audiodata_processing.extract_features_from_wave import extract_specs_new, extract_melspecs
 from src.audiodata_processing.process_spectrograms import augment_im, resize_with_padding
 from src.metadata_processing.load_data import load_sounds
+import pandas as pd
 import numpy as np
 
 
@@ -33,28 +34,34 @@ def classify_sounds_metadata(model, sounds_metadata, recs_dict, all_classes,
             recs_dict_to_use[name] = denoise_recording(rec, **rec_denoising_params) if use_rec_denoising else rec
 
     sounds_npy_aug = []
+    sounds_metadata_aug = []
     for i in range(times_augment):
         sounds_npy_aug.extend(load_sounds(sounds_metadata, recs_dict_to_use,
                                           noisy_sampling=True, timestamps='sec'))
-    frequency_threshold = all_params_dict['features']['frequency_threshold']
-    sounds_npy_aug = np.array([butter_highpass_filter(sound, frequency_threshold, sr)
-                               for sound in sounds_npy_aug])
+        sounds_metadata_aug.append(sounds_metadata)
+    sounds_metadata_aug = pd.concat(sounds_metadata_aug).reset_index(drop=True)
 
-    use_melspecs = all_params_dict['features']['use_melspecs']
-    n_fft = all_params_dict['features']['n_fft']
-    n_mel = all_params_dict['features']['n_mel']
+    highpass_filtering = all_params_dict['features']['highpass_filtering']
+    sounds_npy_aug = np.array([butter_highpass_filter(sound, highpass_filtering, sr) for sound in sounds_npy_aug])
+
+    specs_type = all_params_dict['features']['specs_type']
+    extract_specs_params = all_params_dict['features']['extract_specs_params']
+    n_fft = extract_specs_params['nperseg']
+    n_mel = extract_specs_params['num_freq_bins']
     target_shape = all_params_dict['features']['target_shape']
 
-    if use_melspecs:
-        melspecs = extract_melspecs(sounds_npy_aug, sr, n_fft, n_mel)
+    if specs_type == 'mel':
+        specs = extract_melspecs(sounds_npy_aug, sr, n_fft, n_mel)
+    elif specs_type == 'new-specs':
+        specs = np.array(extract_specs_new(sounds_metadata_aug, sounds_npy_aug, extract_specs_params))
     else:
-        melspecs = extract_specs(sounds_npy_aug, n_fft)
+        raise ValueError('Unsupported specs_type %s' % specs_type)
 
-    melspecs = np.expand_dims(np.array([resize_with_padding(im, target_shape) for im in melspecs]), -1)
+    specs = np.expand_dims(np.array([resize_with_padding(im, target_shape) for im in specs]), -1)
 
-    predictions = model.predict(melspecs)
+    predictions = model.predict(specs)
     grouped_probs = [predictions[i::len(sounds_metadata)] for i in range(len(sounds_metadata))]
     if return_grouped:
         return grouped_probs
     predicted_labels = interpret_answers(grouped_probs, all_classes)
-    return predicted_labels, melspecs
+    return predicted_labels, specs
