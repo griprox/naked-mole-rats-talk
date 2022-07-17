@@ -35,7 +35,7 @@ def extract_mfcc(sounds_list, n_mel=40,):
     """ Compute 1d vector features of mean, var and median of mfcc's taken in time axis """
     mfcc_list = []
     for sound in sounds_list:
-        mfcc = librosa.feature.mfcc(y=sound, sr=22050, n_mel=n_mel).T
+        mfcc = librosa.feature.mfcc(y=sound, sr=22050, n_mfcc=n_mel).T
         mfcc_mean = np.mean(mfcc, 0)
         mfcc_var = np.var(mfcc, 0)
         mfcc_median = np.median(mfcc, 0)

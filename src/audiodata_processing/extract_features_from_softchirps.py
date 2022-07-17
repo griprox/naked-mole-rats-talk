@@ -109,19 +109,29 @@ def compute_all_features(traces, wavs, freq_mult):
     for ind in range(len(traces)):
         t = traces[ind]
         s = wavs[ind]
-        try:
-            slope, freq = compute_slope_and_freq(t, freq_mult)
-            pitch = compute_pitch(s)
-            amp = compute_amplitude(s)
-            ent = compute_wiener_ent(s)
-            zero_cr = compute_zero_crossing(s)
-            dur = compute_duration(t, s)
-            height = compute_height(t, freq_mult)
-            asym = compute_asymmetry(t, freq_mult)
-            dataset.append((slope, freq, pitch, amp, ent, zero_cr, dur, height, asym))
-        except:
-            inds_skipped.append(ind)
-            
+        if t is not None:
+            try:
+                slope, freq = compute_slope_and_freq(t, freq_mult)
+                pitch = compute_pitch(s)
+                amp = compute_amplitude(s)
+                ent = compute_wiener_ent(s)
+                zero_cr = compute_zero_crossing(s)
+                dur = compute_duration(t, s)
+                height = compute_height(t, freq_mult)
+                asym = compute_asymmetry(t, freq_mult)
+                dataset.append((slope, freq, pitch, amp, ent, zero_cr, dur, height, asym))
+            except:
+                inds_skipped.append(ind)
+            else:
+                slope, freq = None, None
+                pitch = compute_pitch(s)
+                amp = compute_amplitude(s)
+                ent = compute_wiener_ent(s)
+                zero_cr = compute_zero_crossing(s)
+                dur = None
+                height = None
+                asym = None
+                dataset.append((slope, freq, pitch, amp, ent, zero_cr, dur, height, asym))
         
     return pd.DataFrame(dataset, columns = ['slope', 'frequency', 'pitch', 'amplitude', 
                                             'wiener_entropy', 'zero_crossings', 'duration', 
